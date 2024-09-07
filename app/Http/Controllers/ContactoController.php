@@ -9,7 +9,7 @@ class ContactoController extends Controller
 {
     public function listado(){
         $mensajes = Contacto::all();
-
+        
         return view('listado-contactos', compact('mensajes'));
 
         //return view('listado-contactos'['mensajes' -> $mensajes]);
@@ -21,19 +21,22 @@ class ContactoController extends Controller
 
 
     public function guardarFormulario(Request $request) {
+        // recibir datos // mediante $request
         //dd($request->all(), $request->nombre);
+        // validar datos
         $request->validate([
-            'nombre' -> 'required|min:3|max:255',
-            'correo' -> 'required|min:3|email',
-            'mensaje' -> ['required|min:3|max:255']
-        ])
+            'nombre' => 'required|min:3|max:255',
+            'correo' => 'required|email',
+            'mensaje' => ['required', 'min:10'],
+        ]);
+        
 
-        $contacto=new Contacto();
+        // guardar datos
+        $contacto = new Contacto();
         $contacto->nombre = $request->nombre;
         $contacto->correo = $request->correo;
         $contacto->mensaje = $request->mensaje;
         $contacto->save();
-    
-        return redirect('/contacto');
+        return redirect('/mensajes');
     }
 }
